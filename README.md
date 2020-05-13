@@ -1,6 +1,6 @@
-# Node.js + MySQL + REST #
+# GEO #
 
-A simple service with no security middleware added.
+Calls api.sunrise-sunset.org with random lat lng and finds earliest sunrise then returns the length of that day. 
 
 
 # Setting up and running services-box #

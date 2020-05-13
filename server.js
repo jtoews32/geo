@@ -4,11 +4,11 @@ var express = require('express'),
     allSettled = require('promise.allsettled'),
     Promise = require('promise'),
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
+    moment = require('moment');
+    axios = require('axios');
+    url = require('url');
     bodyParser = require('body-parser');
 
-const moment = require('moment');
-const axios = require('axios');
-const url = require('url');
 
 var server = express();
 
@@ -47,16 +47,13 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
     URLs.push(axios.get('https://api.sunrise-sunset.org/json?lat=' + getRandomLat() + '&lng=' + getRandomLon()));
   }
 
-
   // Settle the promises
   axios.allSettled(URLs).then((result) => {
 
       result.forEach(element => {
 
           if (element == undefined || element.state !== "fulfilled") {
-
             log.set("error-network", 1);
-
             return;
           }  
 
@@ -106,19 +103,25 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
       }
 
 
-      //console.log(log.get("success-count"));
-
       if(log.get("success-count") == 25) {
-
-          //console.log("Finally");
 
           var minimum = times.reduce((acc, val) => {
  
+ console.log( String( acc  ) );
+
+
+
           console.log(val.get("sunrise"));
           console.log( acc.get("sunrise") );
+          //console.log( JSON.stringify(acc)  );
 
-              accum = JSON.stringify(acc) !== "[]" || val.get("sunrise_moment").isSameOrBefore(acc.get("sunrise_moment")) ? val : acc;
+          
 
+          // accum = JSON.stringify(acc) === "[]" ? val : acc; 
+
+           //|| val.get("sunrise_moment").isSameOrBefore(acc.get("sunrise_moment")) ? val : acc;
+
+           var accum = val;
           return accum;
         }, []);
 
@@ -131,9 +134,9 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
                     + "long" + minimum.get("lng");
 
 
-        res.render("geo", {
-            user: output
-        });
+      console.log(output);
+
+
 
 
  
@@ -164,14 +167,19 @@ server.get('/', function (req, res) {
     sunriseSunsetCall(res, log, 5, i, times);
   }
 
+        res.render("geo", {
+            output: " output " 
+        });
+
+
   if(log.get("error-network") == 1) {
 
   } else {
 
  
-        res.render("geo", {
-          user: "Coordinate to come"
-        });
+       // res.render("geo", {
+        //  user: "Coordinate to come"
+       // }//);
 
 
   }
