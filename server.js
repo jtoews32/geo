@@ -106,38 +106,35 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
       }
 
 
-      console.log(log.get("success-count"));
+      //console.log(log.get("success-count"));
+
       if(log.get("success-count") == 25) {
 
-          console.log("Finally");
+          //console.log("Finally");
 
           var minimum = times.reduce((acc, val) => {
-            if( acc == [] || acc == '[]' || acc.toString == "[]") {
-              console.log(" ACC ACC == [] ");
-
-            }
  
-            console.log(val.get("sunrise"));
- 
-            if (typeof(acc) == 'object'  ) {
-              console.log( "acc object");
-            }
-             // || acc.get("sunrise_moment").isSameOrBefore(val.get("sunrise_moment")) ? val : acc;
- 
-            //if( )
+          console.log(val.get("sunrise"));
+          console.log( acc.get("sunrise") );
 
-            var accum = val; // 
-
+              accum = JSON.stringify(acc) !== "[]" || val.get("sunrise_moment").isSameOrBefore(acc.get("sunrise_moment")) ? val : acc;
 
           return accum;
         }, []);
 
 
-      console.log("Done");
-        console.dir( minimum.get("sunrise")) ;
 
-console.dir( minimum.get("sunset")) ;
-console.dir( minimum.get("day_length")) ;
+        var output = "sunrise: " + minimum.get("sunrise")
+                      + "sunset: " + minimum.get("sunset") 
+                    + "day_length: " + minimum.get("day_length")
+                    + "lat: " + minimum.get("lat")
+                    + "long" + minimum.get("lng");
+
+
+        res.render("geo", {
+            user: output
+        });
+
 
  
       }
@@ -148,20 +145,7 @@ console.dir( minimum.get("day_length")) ;
   }); 
 
   
-  if(log.get("error-network") == 1) {
-          res.render("geo", {
-            user: "Network Error"
-          });
 
-  } else {
-
- 
-          res.render("geo", {
-            user: "Coordinate to come"
-          });
- 
-
-  }
 
 
 }
@@ -180,7 +164,17 @@ server.get('/', function (req, res) {
     sunriseSunsetCall(res, log, 5, i, times);
   }
 
+  if(log.get("error-network") == 1) {
 
+  } else {
+
+ 
+        res.render("geo", {
+          user: "Coordinate to come"
+        });
+
+
+  }
 
 });
 
