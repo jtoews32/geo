@@ -2,10 +2,21 @@
   "name": "geo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "moment": "^2.25.3",
+    "promise": "^8.1.0",
+    "promise.allsettled": "^1.0.2",
+    "rsvp": "^4.8.5",
+    "url": "^0.11.0",
+    "xmlhttprequest": "^1.8.0"
+  }
 }

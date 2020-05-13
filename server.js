@@ -54,8 +54,11 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
       result.forEach(element => {
 
           if (element == undefined || element.state !== "fulfilled") {
+
+            log.set("error-network", 1);
+
             return;
-          } 
+          }  
 
           var day_length = element.value.data.results.day_length;
 
@@ -138,7 +141,29 @@ console.dir( minimum.get("day_length")) ;
 
  
       }
+
+
+
+
   }); 
+
+  
+  if(log.get("error-network") == 1) {
+          res.render("geo", {
+            user: "Network Error"
+          });
+
+  } else {
+
+ 
+          res.render("geo", {
+            user: "Coordinate to come"
+          });
+ 
+
+  }
+
+
 }
 
 
@@ -155,9 +180,7 @@ server.get('/', function (req, res) {
     sunriseSunsetCall(res, log, 5, i, times);
   }
 
-  res.render("geo", {
-    user: "Coordinate to come"
-  });
+
 
 });
 
