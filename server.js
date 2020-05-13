@@ -6,9 +6,6 @@ var express = require('express'),
     XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
     bodyParser = require('body-parser');
 
-
- //const https = require('https');
-//const R = require('ramda');
 const moment = require('moment');
 const axios = require('axios');
 const url = require('url');
@@ -57,11 +54,8 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
       result.forEach(element => {
 
           if (element == undefined || element.state !== "fulfilled") {
-            console.log(element.state);
             return;
-          } else {
-            console.log(element.state);
-          }
+          } 
 
           var day_length = element.value.data.results.day_length;
 
@@ -72,39 +66,27 @@ var sunriseSunsetCall = function(res, log, cnt, idx, times) {
 
             var sunset = element.value.data.results.sunset;
             var sunrise = element.value.data.results.sunrise;
-
             var mSunrise = moment(sunrise, 'LTS'); 
             var mSunset = moment(sunset, 'LTS'); 
 
-
-          //  console.log(element.value.config.url);
             console.log(sunset);
             console.log(sunrise);
             console.log(day_length);
             console.log("\n");
+
             var values = new Map();
             values.set('sunset', sunset);
             values.set('sunrise', sunrise);
             values.set('day_length', day_length);
 
-
-//console.log("aa - "  + element.value.config.url);
             const params = url.parse(element.value.config.url,true).query;
-            // get url parameters
-            var lat = params['lat'];
-            var lng = params['lng'];
 
-console.log (lat + " " + lng );
-
-            values.set('lat', lat);
-            values.set('lng', lng);
-
-
-           // values.set("url", );
+            values.set('lat', params['lat']);
+            values.set('lng', params['lng']);
             values.set('sunset_moment', mSunset);
             values.set('sunrise_moment', mSunrise);
    
-            times.push(values); // set(element.value.config.url, values);
+            times.push(values); 
 
           }      
 
@@ -117,7 +99,6 @@ console.log (lat + " " + lng );
       if(log.get("error-count") > 0) {
         var errs = log.get("error-count") ;
         log.set("error-count", 0);  
-        console.log("calling self");
         sunriseSunsetCall(res, log, errs, idx, times);
       }
 
@@ -128,22 +109,15 @@ console.log (lat + " " + lng );
           console.log("Finally");
 
           var minimum = times.reduce((acc, val) => {
-
-
             if( acc == [] || acc == '[]' || acc.toString == "[]") {
               console.log(" ACC ACC == [] ");
 
             }
-
  
             console.log(val.get("sunrise"));
  
- 
-
-            //console.log(acc);
             if (typeof(acc) == 'object'  ) {
-
-console.log( "acc object");
+              console.log( "acc object");
             }
              // || acc.get("sunrise_moment").isSameOrBefore(val.get("sunrise_moment")) ? val : acc;
  
@@ -156,7 +130,7 @@ console.log( "acc object");
         }, []);
 
 
-console.log("Done");
+      console.log("Done");
         console.dir( minimum.get("sunrise")) ;
 
 console.dir( minimum.get("sunset")) ;
@@ -164,13 +138,8 @@ console.dir( minimum.get("day_length")) ;
 
  
       }
-
-
   }); 
- 
-
 }
-
 
 
 server.get('/', function (req, res) {
